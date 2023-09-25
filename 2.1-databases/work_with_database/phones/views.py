@@ -29,6 +29,6 @@ def sort_phones(sort_id, phones):
 
 def show_product(request, slug):
     template = 'product.html'
-    item = Phone.objects.filter(slug=slug)
+    item = Phone.objects.filter(slug__contains=slug)
     context = {'phone': item[0]}
     return render(request, template, context)
