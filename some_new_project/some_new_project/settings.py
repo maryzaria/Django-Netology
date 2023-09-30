@@ -85,7 +85,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'newdjdb',
         'USER': 'postgres',
-        'PASSWORD': '<your password>',
+        'PASSWORD': 'password',
     }
 }
 

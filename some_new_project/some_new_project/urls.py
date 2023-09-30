@@ -19,9 +19,12 @@ from django.urls import path
 
 from demo.views import hello_view, summarize, pagi, create_car, list_car, create_person, list_pers, list_orders
 
+# прописываем маршруты
+# имя маршрута нужно, чтобы использовать его потом в коде
+
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('admin/', admin.site.urls),  # лучше писать / на конце, это надежнее
     path('', hello_view, name='hello'),
     path('orders/', list_orders)
 ]
