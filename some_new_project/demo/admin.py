@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Person, Car, Product, Order, OrderPosition
+from .models import Product, Order, OrderPosition
 
 
 class OrderPositionInline(admin.TabularInline):

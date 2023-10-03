@@ -5,7 +5,6 @@
     <title>Title</title>
 </head>
 <body>
-<p>{{ orders }}</p>
 {% for order in orders %}
     <p>Заказ №{{ order.id }}</p>
     {% for position in order.positions.all %}

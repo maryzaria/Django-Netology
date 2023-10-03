@@ -25,6 +25,6 @@ def hello_view(request: HttpRequest) -> HttpResponse:
 
 
 def list_orders(request):
-    orders = Order.objects.filter(positions__product__price__gte=600)
+    orders = Order.objects.filter(positions__product__price__gte=600).order_by('positions__order').distinct()
     context = {'orders': orders}
     return render(request, 'orders.html', context)

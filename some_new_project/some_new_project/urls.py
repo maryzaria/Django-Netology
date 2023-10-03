@@ -17,7 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from demo.views import hello_view, summarize, pagi, create_car, list_car, create_person, list_pers, list_orders
+from demo.views import hello_view, list_orders
 
 # прописываем маршруты
 # имя маршрута нужно, чтобы использовать его потом в коде
