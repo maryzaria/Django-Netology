@@ -10,7 +10,8 @@ from django_filters.rest_framework import DjangoFilterBackend
 class ProductViewSet(ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
-    filter_backends = [SearchFilter]
+    filter_backends = [DjangoFilterBackend, SearchFilter]
+    filterset_fields = ['title', 'description']
     search_fileds = ['title', 'description']
     pagination_class = LimitOffsetPagination
 
