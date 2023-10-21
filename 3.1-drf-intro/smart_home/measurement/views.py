@@ -5,7 +5,7 @@ from .serializers import SensorDetailSerializer, SensorListSerializer, Measureme
 
 
 class SensorAPIList(generics.ListCreateAPIView):  # получить список, создать датчик
-    queryset = Measurement.objects.all()
+    queryset = Sensor.objects.all()
     serializer_class = SensorListSerializer
 
 
