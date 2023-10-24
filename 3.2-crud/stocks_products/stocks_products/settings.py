@@ -9,8 +9,10 @@ https://docs.djangoproject.com/en/3.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
-
+import os
 from pathlib import Path
+import environ
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -77,6 +79,9 @@ WSGI_APPLICATION = 'stocks_products.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
+env = environ.Env()
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
+password = env('DB_PASSWORD')
 
 DATABASES = {
     'default': {
@@ -85,7 +90,7 @@ DATABASES = {
         'HOST': '127.0.0.1',
         'PORT': '5432',
         'USER': 'postgres',
-        'PASSWORD': 'your password',
+        'PASSWORD': password,
     }
 }
 

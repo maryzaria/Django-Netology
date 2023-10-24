@@ -24,7 +24,7 @@ PATCH {{baseUrl}}/products/2/
 Content-Type: application/json
 
 {
-  "description": "Самые сочные и ароматные помидорки"
+  "description": "Самые сочные и ароматные помидорки в мире"
 }
 
 ###
@@ -36,7 +36,7 @@ Content-Type: application/json
 ###
 
 # поиск продуктов по названию и описанию
-GET {{baseUrl}}/products/?search=-огурец
+GET {{baseUrl}}/products/?search=пом
 Content-Type: application/json
 
 ###
@@ -46,7 +46,7 @@ POST {{baseUrl}}/stocks/
 Content-Type: application/json
 
 {
-  "address": "мой адрес не дом и не улица, мой адрес сегодня такой: www.ленинград-спб.ru3",
+  "address": "новый склад",
   "positions": [
     {
       "product": 2,
@@ -85,5 +85,5 @@ Content-Type: application/json
 ###
 
 # поиск складов, где есть определенный продукт
-GET {{baseUrl}}/stocks/?products=2
+GET {{baseUrl}}/stocks/?products=4
 Content-Type: application/json
