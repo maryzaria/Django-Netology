@@ -1,7 +1,7 @@
 from random import choice
 
 import pytest
-from django.contrib.auth.models import User
+from rest_framework.status import HTTP_201_CREATED, HTTP_400_BAD_REQUEST, HTTP_200_OK
 from rest_framework.test import APIClient
 from model_bakery import baker
 
@@ -25,11 +25,6 @@ def course_factory():
     def factory(*args, **kwargs):
         return baker.make(Course, *args, **kwargs)
     return factory
-
-
-# @pytest.fixture
-# def student():
-#     return baker.make(Student)
 
 
 @pytest.fixture
@@ -112,3 +107,18 @@ def test_delete_course(client, course):
 
     response_deleted = client.get(f'/api/v1/courses/{course.id}/')
     assert response_deleted.status_code == 404
+
+
+@pytest.mark.parametrize(
+    ['count', 'expected_status_code'],
+    (
+        (1,  HTTP_200_OK),
+        (400, HTTP_400_BAD_REQUEST)
+    )
+)
+@pytest.mark.django_db
+def test_students_count(settings, count, expected_status_code, client, course):
+    student_count = course.students.count()
+    assert settings.MAX_STUDENTS_PER_COURSE >= student_count
+
+
