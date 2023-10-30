@@ -5,6 +5,7 @@
 # получение объявлений
 GET http://127.0.0.1:8000/api/advertisements/
 Content-Type: application/json
+Authorization: Token 411f98748135d4b008ec2ba21decead4769f9682
 
 ###
 
@@ -26,7 +27,7 @@ Content-Type: application/json
 Authorization: Token 411f98748135d4b008ec2ba21decead4769f9682
 
 {
-  "status": "CLOSED"
+  "status": "DRAFT"
 }
 
 ###
