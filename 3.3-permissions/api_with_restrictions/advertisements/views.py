@@ -64,5 +64,7 @@ class AdvertisementViewSet(ModelViewSet):
     def get_favorites(self, request):
         user = request.user
         fav_adv = Favorite.objects.filter(user=user)
+        if not fav_adv:
+            return Response({'result': "You don't have any favorite advertisements"})
         serializer = self.get_serializer(fav_adv, many=True)
         return Response(serializer.data)
