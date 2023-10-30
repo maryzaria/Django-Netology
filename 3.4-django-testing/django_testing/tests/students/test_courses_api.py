@@ -14,7 +14,7 @@ def client():
 
 
 @pytest.fixture
-def student_factory():
+def students_factory():
     def factory(*args, **kwargs):
         return baker.make(Student, *args, **kwargs)
     return factory
@@ -57,7 +57,7 @@ def test_filter_courses_id(client, course_factory):
     """Проверка фильтрации списка курсов по id"""
     courses = course_factory(_quantity=10)
     random_id = choice([course.id for course in courses])
-    response = client.get(f'/api/v1/courses/?id={random_id}')
+    response = client.get('/api/v1/courses/', data={'id': random_id})
     data = response.json()
 
     assert response.status_code == 200
@@ -69,7 +69,7 @@ def test_filter_courses_name(client, course_factory):
     """Проверка фильтрации списка курсов по name"""
     courses = course_factory(_quantity=10)
     random_name = choice([course.name for course in courses])
-    response = client.get(f'/api/v1/courses/?name={random_name}')
+    response = client.get('/api/v1/courses/', data={'name': random_name})
     data = response.json()
 
     assert response.status_code == 200
@@ -110,15 +110,22 @@ def test_delete_course(client, course):
 
 
 @pytest.mark.parametrize(
-    ['count', 'expected_status_code'],
+    'students_count,status_code',
     (
-        (1,  HTTP_200_OK),
-        (400, HTTP_400_BAD_REQUEST)
+        (19, 201),
+        (20, 201),
+        (21, 400)
     )
 )
 @pytest.mark.django_db
-def test_students_count(settings, count, expected_status_code, client, course):
+def test_students_count(settings, students_factory, students_count, status_code, client, course):
     student_count = course.students.count()
     assert settings.MAX_STUDENTS_PER_COURSE >= student_count
+
+    students = students_factory(_quantity=students_count)
+    student_ids = [stud.id for stud in students]
+    data = {"name": 'New test', "students": student_ids}
+    response = client.post('/api/v1/courses/', data=data)
+    assert response.status_code == status_code
 
 
