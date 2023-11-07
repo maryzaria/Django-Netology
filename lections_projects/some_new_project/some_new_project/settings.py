@@ -42,6 +42,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'demo',  # demo.apps.Demo.Config - для более ранних версий django (до 4)
+    'rest_framework',
+    'router',
+    'django_filters',
 ]
 
 MIDDLEWARE = [
@@ -130,3 +133,14 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_FILTER_BACKENDS': [
+        'django_filters.rest_framework.DjangoFilterBackend',
+    ],
+    'SEARCH_PARAM': 'q',  # для фильтров поиска зарезервировано слово search, тут мы меняем его на q
+    'ORDERING_PARAM': 'o',
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 3
+}
