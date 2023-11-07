@@ -32,26 +32,25 @@ class AdvertisementViewSet(ModelViewSet):
     def get_queryset(self):
         queryset = super().get_queryset()
         if self.request.user.is_authenticated:
-            queryset = queryset.filter(creator=self.request.user)  # исключаем чужие черновики
+            # исключаем чужие черновики
+            queryset = queryset.filter(creator=self.request.user) | queryset.exclude(status='DRAFT')
         else:
-            queryset = queryset.exclude(status='DRAFT')  # исключаем все черновики
+            # исключаем все черновики
+            queryset = queryset.exclude(status='DRAFT')
         return queryset
 
     @action(methods=['post'], detail=True)
     def add_favorites(self, request):
         try:
             user = request.user
-            adv_title = request.data.get('title')
-            if not adv_title:
-                return Response({'error': "Title is required"}, status=HTTP_400_BAD_REQUEST)
-
-            adv_description = request.data.get('description', '')
-            if adv_description:
-                adv = Advertisement.objects.get(title=adv_title, description=adv_description)
-            else:
-                adv = Advertisement.objects.get(title=adv_title)
-
-            Favorite.objects.create(user=user, advertisement=adv)
+            advertisement = self.get_object()
+            if Favorite.objects.get(user=user, advertisement=advertisement):
+                return Response({'error': 'This advertisement was previously added to favorites'},
+                                status=HTTP_400_BAD_REQUEST)
+            if advertisement.creator == user:
+                return Response({'error': "You can't add your advertisements to favorites"},
+                                status=HTTP_400_BAD_REQUEST)
+            Favorite.objects.create(user=user, advertisement=advertisement)
             return Response({'success': 'Advertisement added to favorites'}, status=HTTP_200_OK)
 
         except Advertisement.DoesNotExist:
