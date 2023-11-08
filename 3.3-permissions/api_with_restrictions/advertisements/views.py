@@ -2,7 +2,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from rest_framework.status import HTTP_400_BAD_REQUEST, HTTP_200_OK
+from rest_framework.status import HTTP_400_BAD_REQUEST, HTTP_200_OK, HTTP_204_NO_CONTENT
 from rest_framework.viewsets import ModelViewSet
 
 from advertisements.filters import AdvertisementFilter
@@ -39,14 +39,15 @@ class AdvertisementViewSet(ModelViewSet):
             queryset = queryset.exclude(status='DRAFT')
         return queryset
 
-    @action(methods=['post'], detail=True)
-    def add_favorites(self, request):
+    @action(methods=['post'], detail=True, url_path='toggle-favorites')
+    def toggle_favorites(self, request):
         try:
             user = request.user
             advertisement = self.get_object()
             if Favorite.objects.get(user=user, advertisement=advertisement):
-                return Response({'error': 'This advertisement was previously added to favorites'},
-                                status=HTTP_400_BAD_REQUEST)
+                Favorite.objects.filter(user=user, advertisement=advertisement).delete()
+                return Response({'success': 'Advertisement remove from favorites'},
+                                status=HTTP_204_NO_CONTENT)
             if advertisement.creator == user:
                 return Response({'error': "You can't add your advertisements to favorites"},
                                 status=HTTP_400_BAD_REQUEST)

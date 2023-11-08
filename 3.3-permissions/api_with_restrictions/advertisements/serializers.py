@@ -19,10 +19,12 @@ class AdvertisementSerializer(serializers.ModelSerializer):
     creator = UserSerializer(
         read_only=True,
     )
+    # данное поле будет вычисляться на основе некоторой функции get_is_favorite или прописать method_name=
+    is_favourite = serializers.SerializerMethodField()
 
     class Meta:
         model = Advertisement
-        fields = ('id', 'title', 'description', 'creator', 'status', 'created_at', )
+        fields = ('id', 'title', 'description', 'creator', 'status', 'created_at', 'is_favourite')
 
     def create(self, validated_data):
         """Метод для создания"""
@@ -44,3 +46,9 @@ class AdvertisementSerializer(serializers.ModelSerializer):
             if Advertisement.objects.filter(creator=user, status='OPEN').count() > 10:
                 raise serializers.ValidationError('Превышен лимит объявлений: нельзя публиковать больше 10 объявлений')
         return data
+
+    def get_is_favorite(self, obj):
+        user = self.context['request'].user  # self.context - словарь из view функции
+        if not user.is_authenticated:
+            return False
+        return obj.favorite_by.filter(id=user.id).exists()
